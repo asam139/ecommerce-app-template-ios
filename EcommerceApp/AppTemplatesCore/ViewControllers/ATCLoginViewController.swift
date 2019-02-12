@@ -112,23 +112,23 @@ class ATCLoginViewController: UIViewController {
     @objc
     fileprivate func didTapFacebookLoginButton(_ sender: UIButton) {
         // Facebook login attempt
-        LoginManager().logIn(readPermissions, viewController: self, completion: didReceiveFacebookLoginResult)
+        LoginManager().logIn(readPermissions: readPermissions, viewController: self, completion: didReceiveFacebookLoginResult)
     }
 
     @objc
     fileprivate func didTapTwitterLoginButton(_ sender: UIButton) {
         // Twitter login attempt
-        Twitter.sharedInstance().logIn(completion: { session, error in
+        TWTRTwitter.sharedInstance().logIn(completion: { session, error in
             if let session = session {
                 // Successful log in with Twitter
                 if (self.firebaseEnabled) {
-                    let credential = FIRTwitterAuthProvider.credential(withToken: session.authToken, secret: session.authTokenSecret)
+                    let credential = TwitterAuthProvider.credential(withToken: session.authToken, secret: session.authTokenSecret)
                     ATCFirebaseLoginManager.login(credential: credential, completionBlock: self.didCompleteLogin)
                 } else {
                     self.didLogin(firstName: "@" + session.userName)
                 }
             } else {
-                print("error: \(error?.localizedDescription)");
+                print("error: \(error!.localizedDescription)");
             }
         })
     }
@@ -151,7 +151,7 @@ class ATCLoginViewController: UIViewController {
                     let lastName = facebookUser?.lastName,
                     let email = facebookUser?.email {
                     if (self.firebaseEnabled) {
-                        let credential = FIRFacebookAuthProvider.credential(withAccessToken: accessToken.authenticationToken)
+                        let credential = FacebookAuthProvider.credential(withAccessToken: accessToken.authenticationToken)
                         ATCFirebaseLoginManager.login(credential: credential, completionBlock: self.didCompleteLogin)
                     } else {
                         self.didLogin(firstName: firstName, lastName: lastName, email: email, avatarURL: facebookUser?.profilePicture ?? "")

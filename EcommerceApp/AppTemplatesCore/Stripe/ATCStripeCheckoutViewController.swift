@@ -78,10 +78,9 @@ class ATCStripeCheckoutViewController: UIViewController, STPPaymentContextDelega
         config.appleMerchantIdentifier = self.appleMerchantID
         config.companyName = self.companyName
         config.requiredBillingAddressFields = settings.requiredBillingAddressFields
-        config.requiredShippingAddressFields = settings.requiredShippingAddressFields
+        config.requiredShippingAddressFields = [.name, .emailAddress, .phoneNumber, .postalAddress]//settings.requiredShippingAddressFields
         config.shippingType = settings.shippingType
         config.additionalPaymentMethods = settings.additionalPaymentMethods
-        config.smsAutofillDisabled = !settings.smsAutofillEnabled
 
         let paymentContext = STPPaymentContext(apiAdapter: ATCStripeMyAPIClient.sharedClient,
                                                configuration: config,
@@ -95,7 +94,7 @@ class ATCStripeCheckoutViewController: UIViewController, STPPaymentContextDelega
         self.paymentRow = ATCStripeCheckoutRowView(title: "Payment", detail: "Select Payment",
                                           theme: settings.theme)
         var shippingString = "Contact"
-        if config.requiredShippingAddressFields.contains(.postalAddress) {
+        if let _ = config.requiredShippingAddressFields?.contains(.postalAddress) {
             shippingString = config.shippingType == .shipping ? "Shipping" : "Delivery"
         }
         self.shippingString = shippingString

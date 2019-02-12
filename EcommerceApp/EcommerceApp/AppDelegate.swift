@@ -30,10 +30,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         self.configureHostViewControllers()
         if (AppConfiguration.isLoginScreenEnabled) {
             if (AppConfiguration.isTwitterLoginEnabled) {
-                Fabric.with([Twitter.self])
+                TWTRTwitter.sharedInstance().start(withConsumerKey:AppConfiguration.twitterConsumerKey, consumerSecret:AppConfiguration.twitterConsumerSecret)
             }
             if (AppConfiguration.isFirebaseIntegrationEnabled) {
-                FIRApp.configure()
+                FirebaseApp.configure()
             }
             if (AppConfiguration.isStripePaymentEnabled) {
                 STPPaymentConfiguration.shared().publishableKey = AppConfiguration.stripePublishableKey
@@ -151,7 +151,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     fileprivate func prepareCartButton() {
         cartButton = IconButton(image: UIImage(named: "shopping-cart-menu-item"))
-        cartButton.tintColor = Color.blue
+        cartButton.tintColor = Color.blue.base
         cartButton.backgroundColor = Color.green.base
         cartButton.addTarget(self, action: #selector(handleCartButton), for: .touchUpInside)
         cartButton.titleColor = .white
